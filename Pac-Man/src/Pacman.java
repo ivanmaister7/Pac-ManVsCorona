@@ -27,12 +27,12 @@ public class Pacman extends JFrame implements KeyListener{
     private boolean isDown = false;
     private int x = 0;
     private int y = 0;
-    int co = 0;
-    int num = 0;
+    private int pacSize = 50;
     Virus v;
 	JLabel pacman;
 	JLabel bord[] = new JLabel[2];
 	JPanel panel;
+	JLabel but = new JLabel();
 	ImageIcon iconPacman = new ImageIcon("images/pacman.png");
 	ImageIcon iconBord1 = new ImageIcon("images/bord1.png");
 	ImageIcon iconBord2 = new ImageIcon("images/bord2.png");
@@ -45,22 +45,6 @@ public class Pacman extends JFrame implements KeyListener{
         thread.start();
    }
 
-	public Point getCorner1() {
-		Point p = new Point(x,y);
-		return p;
-	}
-	public Point getCorner2() {
-		Point p = new Point(x+50,y);
-		return p;
-	}
-	public Point getCorner3() {
-		Point p = new Point(x,y+50);
-		return p;
-	}
-	public Point getCorner4() {
-		Point p = new Point(x+50,y+50);
-		return p;
-	}
    public void createGUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(215, 235));
@@ -73,13 +57,16 @@ public class Pacman extends JFrame implements KeyListener{
         for (int i = 0; i < bord.length; i++) {
 			bord[i] = new JLabel();
 			bord[i].setIcon(new ImageIcon("images/bord"+(i+1)+".png"));
-			bord[i].setBounds(50+i*100,50,50,100);
 			panel.add(bord[i] );
 		}
-       
+        bord[0].setBounds(50,50,50,100);
+        bord[1].setBounds(150,0,50,150);
+        
+        but.setBounds(100,0,50,50);
+        //panel.add(but);
         
         pacman = new JLabel();
-        pacman.setBounds(x, y, 50, 50);
+        pacman.setBounds(x, y, pacSize, pacSize);
         pacman.setIcon(iconPacman);
         panel.add(pacman);
         
@@ -148,25 +135,37 @@ public class Pacman extends JFrame implements KeyListener{
 	   if(y>150) {
     	   isDown = false;
 	   }
-	   if(x>50&&x<100&&y>50&&y<150) {
-		   isLeft = false;
-		   isUp = false;
-		   x++;
-	   }
-	   else if(x+50>50&&x+50<100&&y>50&&y<150) {
-		   isRight = false;
-		   isUp = false;
-	   }
-	   else if(x>50&&x<100&&y+50>50&&y+50<150) {
-		   isLeft = false;
-		   isDown = false;
-		   x++;
-	   }
-	   else if(x+50>50&&x+50<100&&y+50>50&&y+50<150) {
-		   
-		   isRight = false;
-		   isDown = false;
-	   }
+	   
+	   for (int i = 0; i < bord.length; i++) {
+		   int x1bord = (int)bord[i].getBounds().getMinX();
+		   int y1bord = (int)bord[i].getBounds().getMinY();
+		   int x2bord = (int)bord[i].getBounds().getMaxX();
+		   int y2bord = (int)bord[i].getBounds().getMaxY();
+		   if(x>x1bord&&x<x2bord&&y>y1bord&&y<y2bord) {
+			   isLeft = false;
+			   isUp = false;
+			   x++;
+			   y++;
+		   }
+		   else if(x+pacSize>x1bord&&x+pacSize<x2bord&&y>y1bord&&y<y2bord) {
+			   isRight = false;
+			   isUp = false;
+			   x--;
+			   y++;
+		   }
+		   else if(x>x1bord&&x<x2bord&&y+pacSize>y1bord&&y+pacSize<y2bord) {
+			   isLeft = false;
+			   isDown = false;
+			   x++;
+			   y--;
+		   }
+		   else if(x+pacSize>x1bord&&x+pacSize<x2bord&&y+pacSize>y1bord&&y+pacSize<y2bord) {
+			   isRight = false;
+			   isDown = false;
+			   x--;
+			   y--;
+		   }
+	}
 	   
 	   
        if (isLeft) x-=DIR_STEP;
