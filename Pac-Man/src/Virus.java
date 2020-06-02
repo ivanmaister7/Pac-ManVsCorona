@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Rectangle;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -13,6 +14,8 @@ public class Virus extends JLabel{
 	JLabel virus;
 	int co = 0;
 	int num = 0;
+	int x;
+	int y;
 	
 	public Virus() {
 		virus = new JLabel();
@@ -21,10 +24,24 @@ public class Virus extends JLabel{
 		
 	}
 	public void setBounds(int x, int y,int width, int height) {
+		this.x = x;
+		this.y = y;
 		virus.setBounds(x,y,width,height);
 	}
 	public void add(JPanel panel) {
 		panel.add(virus);
+	}
+	public void setVis() {
+		virus.setVisible(false);
+	}
+	public Rectangle getBounds() {
+		return virus.getBounds();
+	}
+	public boolean isVis() {
+		if(virus.isVisible())
+			return true;
+		else
+			return false;
 	}
 	public void anim() {
 		co++;
@@ -34,7 +51,7 @@ public class Virus extends JLabel{
 	       else if((co/100)%2==1) {
 	    	   num--;
 	       }
-	       virus.setBounds(50-num/10,0-num/10, 50+2*num/10, 50+2*num/10);
+	       virus.setBounds(x-num/10,y-num/10, 50+2*num/10, 50+2*num/10);
 	}
 
 }
