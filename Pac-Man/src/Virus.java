@@ -31,8 +31,8 @@ public class Virus extends JLabel{
 	public void add(JPanel panel) {
 		panel.add(virus);
 	}
-	public void setVis() {
-		virus.setVisible(false);
+	public void setVis(boolean bol) {
+		virus.setVisible(bol);
 	}
 	public Rectangle getBounds() {
 		return virus.getBounds();
