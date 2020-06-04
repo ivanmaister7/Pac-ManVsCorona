@@ -28,7 +28,9 @@ public class Pacman extends JFrame implements KeyListener{
     private boolean isRight = false;
     private boolean isUp = false;
     private boolean isDown = false;
+    private int life = 3;
     private int check = 0;
+    private int scoreNum = 0;
     private int count = 0;
     private int second = 0;
     private int activeVirusesCount = 0;
@@ -38,13 +40,14 @@ public class Pacman extends JFrame implements KeyListener{
     private int pixel[][] = new int [HEIGH][WIDHT];
     Virus virus[] = new Virus[83];
     JLabel activeVirus[] = new JLabel[5];
+    JLabel pacLifes[] = new JLabel[3];
 	JLabel pacman;
+	JLabel score;
 	JLabel bord[] = new JLabel[6];
 	JPanel panel;
 	JLabel but = new JLabel();
+	JLabel pointPanel;
 	ImageIcon iconPacman = new ImageIcon("images/pacman.png");
-	ImageIcon iconBord1 = new ImageIcon("images/bord1.png");
-	ImageIcon iconBord2 = new ImageIcon("images/bord2.png");
 	
 	public Pacman(){
         super("ColorGame");
@@ -69,6 +72,24 @@ public class Pacman extends JFrame implements KeyListener{
         	}
 		}
         add(panel);
+        
+        for (int i = 0; i < pacLifes.length; i++) {
+			pacLifes[i] = new JLabel();
+			pacLifes[i].setIcon(new ImageIcon("images/life.png"));
+			pacLifes[i].setBounds(60+60*i,600,50,50);
+		    panel.add(pacLifes[i]);
+		}
+        
+        score = new JLabel();
+        score.setText(scoreNum+"/"+10*virus.length);
+        score.setBounds(650,600,100,50);
+        panel.add(score);
+        
+        pointPanel = new JLabel();
+        pointPanel.setIcon(new ImageIcon("images/pointpanel.png"));
+        pointPanel.setBounds(0,600,WIDHT,50);
+        panel.add(pointPanel);
+        
         
         for (int i = 0; i < bord.length; i++) {
 			bord[i] = new JLabel();
@@ -264,60 +285,75 @@ private void addBoardsToPixelList(JLabel bord) {
        pacman.setLocation(x, y);
        analizationLocation();
        checkFinal();
-       /*if(activeVirus[0].isVisible()) {
+       for (int i = 0; i < activeVirus.length; i++) {
+		movesForActiveViruses(activeVirus[i]);
+	}
+       
+    	  
+   }
+    
+   private void movesForActiveViruses(JLabel AV) {
+	   if(AV.isVisible()) {
     	   boolean leftIsClear = false;
     	   boolean rightIsClear = false;
     	   boolean upIsClear = false;
     	   boolean downIsClear = false;
-    	   if(pixel[(int) (activeVirus[0].getBounds().getMinY()-3)][(int) activeVirus[0].getBounds().getMinX()]!=-2&&pixel[(int) (activeVirus[0].getBounds().getMinY()-3)][(int) activeVirus[0].getBounds().getMinX()+45]!=-2) {
+    	   if(pixel[(int) (AV.getBounds().getMinY()-3)][(int) AV.getBounds().getMinX()]!=-2&&pixel[(int) (AV.getBounds().getMinY()-3)][(int) AV.getBounds().getMinX()+45]!=-2) {
     		   upIsClear = true;
     	   }
-    	   if(pixel[(int) (activeVirus[0].getBounds().getMinY())][(int) activeVirus[0].getBounds().getMinX()+51]!=-2&&pixel[(int) (activeVirus[0].getBounds().getMinY()+40)][(int) activeVirus[0].getBounds().getMinX()+51]!=-2) {
+    	   if(pixel[(int) (AV.getBounds().getMinY())][(int) AV.getBounds().getMinX()+51]!=-2&&pixel[(int) (AV.getBounds().getMinY()+40)][(int) AV.getBounds().getMinX()+51]!=-2) {
     		   rightIsClear = true;
     	   }
-    	   if(pixel[(int) (activeVirus[0].getBounds().getMinY()+3)][(int) activeVirus[0].getBounds().getMinX()]!=-2&&pixel[(int) (activeVirus[0].getBounds().getMinY()+3)][(int) activeVirus[0].getBounds().getMinX()+45]!=-2) {
+    	   if(pixel[(int) (AV.getBounds().getMinY()+3)][(int) AV.getBounds().getMinX()]!=-2&&pixel[(int) (AV.getBounds().getMinY()+3)][(int) AV.getBounds().getMinX()+45]!=-2) {
     		   downIsClear = true;
     	   }
-    	   if(pixel[(int) (activeVirus[0].getBounds().getMinY())][(int) activeVirus[0].getBounds().getMinX()-3]!=-2&&pixel[(int) (activeVirus[0].getBounds().getMinY()+45)][(int) activeVirus[0].getBounds().getMinX()-3]!=-2) {
+    	   if(pixel[(int) (AV.getBounds().getMinY())][(int) AV.getBounds().getMinX()-3]!=-2&&pixel[(int) (AV.getBounds().getMinY()+45)][(int) AV.getBounds().getMinX()-3]!=-2) {
     		   leftIsClear = true;
     	   }
     	   if(rightIsClear)
-    		   activeVirus[0].setLocation((int)activeVirus[0].getBounds().getMinX()+1,(int)activeVirus[0].getBounds().getMinY());
+    		   AV.setLocation((int)AV.getBounds().getMinX()+1,(int)AV.getBounds().getMinY());
     	   else if(rightIsClear==false) {
-    		   int newy = (int)activeVirus[0].getBounds().getMinY();
+    		   int newy = (int)AV.getBounds().getMinY();
     		   if(newy>y)
     			   newy--;
     		   else {
     			   newy++;
     		   }
-    		   activeVirus[0].setLocation((int)activeVirus[0].getBounds().getMinX(),newy);
+    		   AV.setLocation((int)AV.getBounds().getMinX(),newy);
     	   }
     		   
-    	   but.setText(""+rightIsClear);
-       }*/
-       
-    	  
-   }
-    
-   private void deathCheck() {
+    	   //but.setText(""+rightIsClear);
+       }
+	
+}
+
+private void deathCheck() {
 	for (int i = 0; i < activeVirus.length; i++) {
 		   int x1bord = (int)activeVirus[i].getBounds().getMinX();
 		   int y1bord = (int)activeVirus[i].getBounds().getMinY();
 		   int x2bord = (int)activeVirus[i].getBounds().getMaxX();
 		   int y2bord = (int)activeVirus[i].getBounds().getMaxY();
 		   if(x1bord+25>x&&x1bord+25<x+50&&y+50==y1bord) {
-			  pacman.setVisible(false);
+			  restartPacman();
 		   }
 		   else if(y1bord+25>y&&y1bord+25<y+50&&x==x2bord) {
-				  pacman.setVisible(false);
+			   restartPacman();
 			   }
 		   else if(x1bord+25>x&&x1bord+25<x+50&&y==y2bord) {
-				  pacman.setVisible(false);
+			   restartPacman();
 			   }
 		   else if(y1bord+25>y&&y1bord+25<y+50&&x+50==x1bord) {
-				  pacman.setVisible(false);
+			   restartPacman();
 			   }
 	}
+}
+
+private void restartPacman() {
+	life--;
+	pacLifes[life].setVisible(false);
+	x = 0;
+	y = 0;
+	
 }
 
 private void createActiveVirus() {
@@ -359,7 +395,7 @@ private void createActiveVirus() {
 			   check++;
 	   }
 	if(ifFinal())
-		pacman.setIcon(iconBord1);
+		pacman.setIcon(iconPacman);
 	
 	
 }
@@ -372,6 +408,8 @@ private void createActiveVirus() {
 private void analizationLocation() {
 	if(pixel[y+25][x+25]>-1) {
 		virus[pixel[y+25][x+25]].setVis(false);
+		scoreNum+=10;
+		score.setText(scoreNum+"/"+10*virus.length);
 		int change = pixel[y+25][x+25];
 		for (int i = 0; i < HEIGH; i++) {
         	for (int j = 0; j < WIDHT; j++) {
