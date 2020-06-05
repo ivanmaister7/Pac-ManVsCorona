@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -39,6 +40,7 @@ public class Pacman extends JFrame implements KeyListener{
     private int pacSize = 50;
     private int pixel[][] = new int [HEIGH][WIDHT];
     Virus virus[] = new Virus[83];
+    JLabel fin;
     JLabel activeVirus[] = new JLabel[5];
     JLabel pacLifes[] = new JLabel[3];
 	JLabel pacman;
@@ -47,10 +49,19 @@ public class Pacman extends JFrame implements KeyListener{
 	JPanel panel;
 	JLabel but = new JLabel();
 	JLabel pointPanel;
-	ImageIcon iconPacman = new ImageIcon("images/pacman.png");
+	private double yyy[] = new double[activeVirus.length];
+	private double xxx[] = new double[activeVirus.length];
+	ImageIcon iconPacmanRight = new ImageIcon("images/pacmanR.png");
+	ImageIcon iconPacmanDown = new ImageIcon("images/pacmanD.png");
+	ImageIcon iconPacmanLeft = new ImageIcon("images/pacmanL.png");
+	ImageIcon iconPacmanUp = new ImageIcon("images/pacmanU.png");
+	Font font = new Font("Arial", Font.BOLD, 25);
+	Font font1 = new Font("Jokerman", Font.PLAIN, 20);
 	
 	public Pacman(){
         super("ColorGame");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setPreferredSize(new Dimension(WIDHT+15, HEIGH+50+35));
         createGUI();
         this.addKeyListener(this);
         thread = new MoveThread2(this);
@@ -58,9 +69,6 @@ public class Pacman extends JFrame implements KeyListener{
    }
 
    public void createGUI() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(WIDHT+15, HEIGH+50+35));
-
         
         
         panel = new JPanel();
@@ -73,16 +81,30 @@ public class Pacman extends JFrame implements KeyListener{
 		}
         add(panel);
         
+        fin = new JLabel();
+		fin.setBounds(200,200,400,270);
+		fin.setIcon(new ImageIcon("images/viruswin.png"));
+		fin.setVisible(false);
+		panel.add(fin);
+        
         for (int i = 0; i < pacLifes.length; i++) {
 			pacLifes[i] = new JLabel();
 			pacLifes[i].setIcon(new ImageIcon("images/life.png"));
 			pacLifes[i].setBounds(60+60*i,600,50,50);
 		    panel.add(pacLifes[i]);
 		}
+        but.setBounds(500,570,100,100);
+        panel.add(but);
+        
+        JLabel rahText = new JLabel("Рахунок: ");
+        rahText.setFont(font);
+        rahText.setBounds(520,600,130,50);
+        panel.add(rahText);
         
         score = new JLabel();
+        score.setFont(font1);
         score.setText(scoreNum+"/"+10*virus.length);
-        score.setBounds(650,600,100,50);
+        score.setBounds(650,600,150,50);
         panel.add(score);
         
         pointPanel = new JLabel();
@@ -109,12 +131,11 @@ public class Pacman extends JFrame implements KeyListener{
         bord[5].setBounds(550,250,200,300);
         addBoardsToPixelList(bord[5]);
         
-        but.setBounds(100,0,50,50);
-        panel.add(but);
+        
         
         for (int i = 0; i < activeVirus.length; i++) {
         	activeVirus[i] = new JLabel();
-			activeVirus[i].setIcon(iconPacman);
+			activeVirus[i].setIcon(new ImageIcon("images/activecorona.png"));
 			activeVirus[i].setBounds(-100,-100,50,50);
 			activeVirus[i].setVisible(false);
 			panel.add(activeVirus[i]);
@@ -122,7 +143,7 @@ public class Pacman extends JFrame implements KeyListener{
         
         pacman = new JLabel();
         pacman.setBounds(x, y, pacSize, pacSize);
-        pacman.setIcon(iconPacman);
+        pacman.setIcon(iconPacmanRight);
         for (int i = 0; i < 50; i++) {
         	for (int j = 0; j < 50; j++) {
         		pixel[i][j] = -3;
@@ -178,25 +199,29 @@ private void addBoardsToPixelList(JLabel bord) {
     	   isLeft = true;
     	   isRight = false;
     	   isUp = false;
-    	   isDown = false;  
+    	   isDown = false;
+    	   pacman.setIcon(iconPacmanLeft);
        }
        if (e.getKeyCode()==KeyEvent.VK_RIGHT) {
     	   isLeft = false;
     	   isRight = true;
     	   isUp = false;
     	   isDown = false; 
+    	   pacman.setIcon(iconPacmanRight);
        }
        if (e.getKeyCode()==KeyEvent.VK_UP) {
     	   isLeft = false;
     	   isRight = false;
     	   isUp = true;
     	   isDown = false; 
+    	   pacman.setIcon(iconPacmanUp);
        }
        if (e.getKeyCode()==KeyEvent.VK_DOWN) {
     	   isLeft = false;
     	   isRight = false;
     	   isUp = false;
-    	   isDown = true; 
+    	   isDown = true;
+    	   pacman.setIcon(iconPacmanDown);
        }
    }
 
@@ -281,50 +306,167 @@ private void addBoardsToPixelList(JLabel bord) {
      if(second==5*(activeVirusesCount+1)&&activeVirusesCount<5) {
     	 createActiveVirus();
      }
+     for (int i = 0; i < xxx.length; i++) {
+    	 if(yyy[i]>1)
+        	 yyy[i]=0;
+         if(xxx[i]>1)
+        	 xxx[i]=0;
+	}
        deathCheck();
        pacman.setLocation(x, y);
        analizationLocation();
        checkFinal();
-       for (int i = 0; i < activeVirus.length; i++) {
-		movesForActiveViruses(activeVirus[i]);
-	}
+       
+		for (int i = 0; i < activeVirus.length; i++) {
+			movesForActiveViruses(activeVirus[i],i);
+		}
+		
+		
+	
        
     	  
    }
     
-   private void movesForActiveViruses(JLabel AV) {
+   private void movesForActiveViruses(JLabel AV,int num) {
 	   if(AV.isVisible()) {
     	   boolean leftIsClear = false;
     	   boolean rightIsClear = false;
     	   boolean upIsClear = false;
     	   boolean downIsClear = false;
-    	   if(pixel[(int) (AV.getBounds().getMinY()-3)][(int) AV.getBounds().getMinX()]!=-2&&pixel[(int) (AV.getBounds().getMinY()-3)][(int) AV.getBounds().getMinX()+45]!=-2) {
+    	   if(nobord(AV)&&pixel[getElementY(AV)-1][getElementX(AV)+2]!=-2&&pixel[getElementY(AV)-1][getElementX(AV)+48]!=-2) {
     		   upIsClear = true;
     	   }
-    	   if(pixel[(int) (AV.getBounds().getMinY())][(int) AV.getBounds().getMinX()+51]!=-2&&pixel[(int) (AV.getBounds().getMinY()+40)][(int) AV.getBounds().getMinX()+51]!=-2) {
+    	   if(nobord(AV)&&pixel[getElementY(AV)+2][getElementX(AV)+51]!=-2&&pixel[getElementY(AV)+48][getElementX(AV)+51]!=-2) {
     		   rightIsClear = true;
     	   }
-    	   if(pixel[(int) (AV.getBounds().getMinY()+3)][(int) AV.getBounds().getMinX()]!=-2&&pixel[(int) (AV.getBounds().getMinY()+3)][(int) AV.getBounds().getMinX()+45]!=-2) {
+    	   if(nobord(AV)&&pixel[getElementY(AV)+51][getElementX(AV)+2]!=-2&&pixel[getElementY(AV)+51][getElementX(AV)+48]!=-2) {
     		   downIsClear = true;
     	   }
-    	   if(pixel[(int) (AV.getBounds().getMinY())][(int) AV.getBounds().getMinX()-3]!=-2&&pixel[(int) (AV.getBounds().getMinY()+45)][(int) AV.getBounds().getMinX()-3]!=-2) {
+    	   if(nobord(AV)&&pixel[getElementY(AV)+2][getElementX(AV)-1]!=-2&&pixel[getElementY(AV)+48][getElementX(AV)-1]!=-2) {
     		   leftIsClear = true;
     	   }
-    	   if(rightIsClear)
-    		   AV.setLocation((int)AV.getBounds().getMinX()+1,(int)AV.getBounds().getMinY());
-    	   else if(rightIsClear==false) {
-    		   int newy = (int)AV.getBounds().getMinY();
-    		   if(newy>y)
-    			   newy--;
-    		   else {
-    			   newy++;
-    		   }
-    		   AV.setLocation((int)AV.getBounds().getMinX(),newy);
+    	   if(rightIsClear==false&&leftIsClear==false) {
+    		   verticalMove(AV,num);
     	   }
+    	   else if(upIsClear==false&&downIsClear==false) {
+    		  horizontalMove(AV,num);
+    	   }
+    	   else if(leftIsClear==false&&upIsClear==true&&rightIsClear==true&&downIsClear==true) {
+    		    int r = (x-getElementX(AV)-1)*(x-getElementX(AV)-1)+(y-getElementY(AV))*(y-getElementY(AV));
+                int d = (y-getElementY(AV)-1)*(y-getElementY(AV)-1)+(x-getElementX(AV))*(x-getElementX(AV));
+    		    int u = (y-getElementY(AV)+1)*(y-getElementY(AV)+1)+(x-getElementX(AV))*(x-getElementX(AV));
+    		    if(getMinNum(r,d,u)==r) {
+    		    	horizontalMove(AV,num);
+    		    }
+    		    else{
+    		    	verticalMove(AV,num);
+    		    }
+    	   }
+    	   else if(leftIsClear==true&&upIsClear==false&&rightIsClear==true&&downIsClear==true) {
+    		    int r = (x-getElementX(AV)-1)*(x-getElementX(AV)-1)+(y-getElementY(AV))*(y-getElementY(AV));
+    		    int d = (y-getElementY(AV)-1)*(y-getElementY(AV)-1)+(x-getElementX(AV))*(x-getElementX(AV));
+      		    int l = (x-getElementX(AV)+1)*(x-getElementX(AV)+1)+(y-getElementY(AV))*(y-getElementY(AV));
+      		    if(getMinNum(r,d,l)==d) {
+      		    	verticalMove(AV,num);
+      		    }
+      		    else{
+      		    	horizontalMove(AV,num);
+      		    }
+    	   }
+    	   else if(leftIsClear==true&&upIsClear==true&&rightIsClear==false&&downIsClear==true) {
+    		   int l = (x-getElementX(AV)+1)*(x-getElementX(AV)+1)+(y-getElementY(AV))*(y-getElementY(AV));
+               int d = (y-getElementY(AV)-1)*(y-getElementY(AV)-1)+(x-getElementX(AV))*(x-getElementX(AV));
+   		       int u = (y-getElementY(AV)+1)*(y-getElementY(AV)+1)+(x-getElementX(AV))*(x-getElementX(AV));
+               if(getMinNum(l,d,u)==l) {
+            	   horizontalMove(AV,num);
+               }
+               else{  		    	
+            	   verticalMove(AV,num);
+               }
+   	   }
+    	   else if(leftIsClear==true&&upIsClear==true&&rightIsClear==true&&downIsClear==false) {
+    		   int l = (x-getElementX(AV)+1)*(x-getElementX(AV)+1)+(y-getElementY(AV))*(y-getElementY(AV));
+    		   int r = (x-getElementX(AV)-1)*(x-getElementX(AV)-1)+(y-getElementY(AV))*(y-getElementY(AV));
+   		       int u = (y-getElementY(AV)+1)*(y-getElementY(AV)+1)+(x-getElementX(AV))*(x-getElementX(AV));
+     		    if(getMinNum(r,u,l)==u) {
+     		    	verticalMove(AV,num);
+     		    }
+     		    else{
+     		    	horizontalMove(AV,num);
+     		    }
+   	   }
+    	   else if(leftIsClear==true&&upIsClear==true&&rightIsClear==true&&downIsClear==true) {
+    		   int l = (x-getElementX(AV)+1)*(x-getElementX(AV)+1)+(y-getElementY(AV))*(y-getElementY(AV));
+    		   int r = (x-getElementX(AV)-1)*(x-getElementX(AV)-1)+(y-getElementY(AV))*(y-getElementY(AV));
+   		       int u = (y-getElementY(AV)+1)*(y-getElementY(AV)+1)+(x-getElementX(AV))*(x-getElementX(AV));
+   		       int d = (y-getElementY(AV)-1)*(y-getElementY(AV)-1)+(x-getElementX(AV))*(x-getElementX(AV));
+   		       if(r>d)
+   		    	   r=d;
+     		    if(getMinNum(r,u,l)==u||getMinNum(r,u,l)==d) {
+     		    	verticalMove(AV,num);
+     		    }
+     		    else{
+     		    	horizontalMove(AV,num);
+     		    }
+   	   }
     		   
-    	   //but.setText(""+rightIsClear);
+    	   
        }
 	
+}
+
+private int getMinNum(int a, int b, int c) {
+	int min;
+	if (a < b){
+        min = a;
+    }else{
+        min = b;
+    }
+
+    if (min > c){
+        min = c;
+    }
+	return min;
+}
+
+private void horizontalMove(JLabel AV,int num) {
+	   int b = (x-getElementX(AV)-1)*(x-getElementX(AV)-1);
+	   int c = (x-getElementX(AV)+1)*(x-getElementX(AV)+1);
+	   if(b>c) {
+		   xxx[num]+=0.4;
+			   AV.setLocation(AV.getLocation().x-(int)xxx[num], AV.getLocation().y);
+	   }
+	   else if(b<c) {
+		   xxx[num]+=0.4;
+			   AV.setLocation(AV.getLocation().x+(int)xxx[num], AV.getLocation().y);
+	   }
+	
+}
+
+private void verticalMove(JLabel AV,int num) {
+	int b = (y-getElementY(AV)-1)*(y-getElementY(AV)-1);
+    int c = (y-getElementY(AV)+1)*(y-getElementY(AV)+1);
+if(b>c) {
+	   yyy[num]+=0.4;
+		   AV.setLocation(AV.getLocation().x, AV.getLocation().y-(int)yyy[num]);
+}
+else if(b<c) {
+	   yyy[num]+=0.4;
+		   AV.setLocation(AV.getLocation().x, AV.getLocation().y+(int)yyy[num]);
+}
+	
+}
+
+private boolean nobord(JLabel v) {
+	if(getElementX(v)>0&&getElementY(v)>0&&getElementX(v)<WIDHT-51&&getElementY(v)<HEIGH-51)
+		return true;
+	return false;
+}
+private int getElementX(JLabel ob) {
+	return (int) ob.getBounds().getMinX();
+}
+private int getElementY(JLabel ob) {
+	return (int) ob.getBounds().getMinY();
 }
 
 private void deathCheck() {
@@ -349,10 +491,27 @@ private void deathCheck() {
 }
 
 private void restartPacman() {
-	life--;
+	if(life>0)
+		life--;
 	pacLifes[life].setVisible(false);
 	x = 0;
 	y = 0;
+	if(life==0) {
+		pacman.setVisible(false);
+		fin.setIcon(new ImageIcon("images/viruswin.png"));
+		fin.setVisible(true);
+		restartGame();
+		
+	}
+	
+}
+
+private void restartGame() {
+	life=3;
+	restartTimer();
+	activeVirusesCount = 0;
+	scoreNum = 0;
+	createGUI();
 	
 }
 
@@ -363,7 +522,7 @@ private void createActiveVirus() {
 		int virusy = random.nextInt(pixel.length);
 		if(pixel[virusy][virusx]>-1) {
 			Virus v = virus[pixel[virusy][virusx]];
-			virusx = (int) v.getBounds().getMinX();
+			virusx = (int) v.getBounds().getMinX()+1;
 			virusy = (int) v.getBounds().getMinY();
 			if(activeVirusesCount%2==0) {
 				virusx+=9;
@@ -394,8 +553,14 @@ private void createActiveVirus() {
 		   if(virus[i].isVis()==false) 
 			   check++;
 	   }
-	if(ifFinal())
-		pacman.setIcon(iconPacman);
+	if(ifFinal()) {
+		for (int i = 0; i < activeVirus.length; i++) {
+			activeVirus[i].setVisible(false);
+		}
+		fin.setIcon(new ImageIcon("images/pacwin.png"));
+		fin.setVisible(true);
+	}
+		
 	
 	
 }
