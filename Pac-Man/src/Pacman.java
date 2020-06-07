@@ -34,6 +34,7 @@ public class Pacman extends JFrame implements KeyListener{
     private boolean isDown = false;
     private boolean makeShot = false;
     private int life = 3;
+    private int level = 0;
     private int countForPill = 0;
     private int check = 0;
     private int scoreNum = 0;
@@ -48,7 +49,7 @@ public class Pacman extends JFrame implements KeyListener{
     Virus virus[] = new Virus[83];
     JButton nextLevel = new JButton("Далі");
     JLabel tablet = new JLabel();
-    JLabel fin;
+    JLabel fin = new JLabel();;
     JLabel activeVirus[] = new JLabel[5];
     JLabel pacLifes[] = new JLabel[3];
 	JLabel pacman;
@@ -80,6 +81,10 @@ public class Pacman extends JFrame implements KeyListener{
 
    public void createGUI() {
         
+	   if(level==1) {
+		   bord = new JLabel[9];
+		   virus = new Virus[95];
+	   }
         
         panel = new JPanel();
         panel.setLayout(null);
@@ -96,14 +101,13 @@ public class Pacman extends JFrame implements KeyListener{
         tablet.setVisible(false);
         panel.add(tablet);
         
-        fin = new JLabel();
+        
 		fin.setBounds(200,200,400,270);
 		fin.setIcon(new ImageIcon("images/viruswin.png"));
 		fin.setVisible(false);
 		panel.add(fin);
         
 		pill.setBounds(x,y,40,40);
-		pill.setIcon(new ImageIcon("images/pill.png"));
 		pill.setVisible(false);
 		panel.add(pill);
 		
@@ -135,21 +139,43 @@ public class Pacman extends JFrame implements KeyListener{
         
         for (int i = 0; i < bord.length; i++) {
 			bord[i] = new JLabel();
-			bord[i].setIcon(new ImageIcon("images/bord"+(i+1)+".png"));
+			bord[i].setIcon(new ImageIcon("images/bord"+level+"."+(i+1)+".png"));
 			panel.add(bord[i]);
 		}
-        bord[0].setBounds(50,50,200,150);
-        addBoardsToPixelList(bord[0]);
-        bord[1].setBounds(300,50,200,300);
-        addBoardsToPixelList(bord[1]);
-        bord[2].setBounds(550,50,200,150);
-        addBoardsToPixelList(bord[2]);
-        bord[3].setBounds(50,250,200,300);
-        addBoardsToPixelList(bord[3]);
-        bord[4].setBounds(300,400,200,150);
-        addBoardsToPixelList(bord[4]);
-        bord[5].setBounds(550,250,200,300);
-        addBoardsToPixelList(bord[5]);
+        if(level==0) {
+        	bord[0].setBounds(50,50,200,150);
+            addBoardsToPixelList(bord[0]);
+            bord[1].setBounds(300,50,200,300);
+            addBoardsToPixelList(bord[1]);
+            bord[2].setBounds(550,50,200,150);
+            addBoardsToPixelList(bord[2]);
+            bord[3].setBounds(50,250,200,300);
+            addBoardsToPixelList(bord[3]);
+            bord[4].setBounds(300,400,200,150);
+            addBoardsToPixelList(bord[4]);
+            bord[5].setBounds(550,250,200,300);
+            addBoardsToPixelList(bord[5]);
+        }
+        if(level==1) {
+        	bord[0].setBounds(50,50,200,150);
+            addBoardsToPixelList(bord[0]);
+            bord[1].setBounds(300,50,200,100);
+            addBoardsToPixelList(bord[1]);
+            bord[2].setBounds(550,50,200,150);
+            addBoardsToPixelList(bord[2]);
+            bord[3].setBounds(300,200,200,150);
+            addBoardsToPixelList(bord[3]);
+            bord[4].setBounds(300,400,200,150);
+            addBoardsToPixelList(bord[4]);
+            bord[5].setBounds(50,250,200,100);
+            addBoardsToPixelList(bord[5]);
+            bord[6].setBounds(50,400,200,150);
+            addBoardsToPixelList(bord[6]);
+            bord[7].setBounds(550,250,200,100);
+            addBoardsToPixelList(bord[7]);
+            bord[8].setBounds(550,400,200,150);
+            addBoardsToPixelList(bord[8]);
+        }
         
         
         
@@ -191,7 +217,7 @@ public class Pacman extends JFrame implements KeyListener{
 				}
 			}
 		}
-	 virus[v].setBounds(xloc,yloc,50,50);
+	 virus[v].setBounds(xloc,yloc,49,49);
 }
 
 private void addBoardsToPixelList(JLabel bord) {
@@ -246,11 +272,19 @@ private void addBoardsToPixelList(JLabel bord) {
        if(e.getKeyCode()==KeyEvent.VK_R) {
     	   restartGame();
        }
-       if(countForPill>100&&e.getKeyCode()==KeyEvent.VK_SPACE) {
+       if(e.getKeyCode()==KeyEvent.VK_ENTER&&fin.isVisible()==true) {
+    	   level++;
+    	   restartGame();
+       }
+       if(countForPill>=100&&e.getKeyCode()==KeyEvent.VK_SPACE) {
     	   tablet.setVisible(false);
     	   pill.setLocation(x+5, y+5);
     	   makeShot = true;
     	   nowIcon = (ImageIcon) pacman.getIcon();
+    	   if(nowIcon==iconPacmanDown||nowIcon==iconPacmanUp)
+    		   pill.setIcon(new ImageIcon("images/pill2.png"));
+    	   if(nowIcon==iconPacmanRight||nowIcon==iconPacmanLeft)
+    		   pill.setIcon(new ImageIcon("images/pill.png"));
     	   countForPill = 0;
        }
    }
@@ -338,9 +372,7 @@ private void addBoardsToPixelList(JLabel bord) {
      if(second==10*(activeVirusesCount+1)&&activeVirusesCount<5) {
     	 createActiveVirus();
      }
-     if(second==15*(bonusCount+1)) {
-    	// createBonus();
-     }
+     
      for (int i = 0; i < xxx.length; i++) {
     	 if(yyy[i]>1)
         	 yyy[i]=0;
@@ -471,7 +503,7 @@ private void addBoardsToPixelList(JLabel bord) {
 			makeShot = false;
 		}
 		for (int i = 0; i < activeVirus.length; i++) {
-			if(getElementX(activeVirus[i])<getElementX(pill)+20&&getElementX(activeVirus[i])+50>getElementX(pill)+20&&getElementY(activeVirus[i])<getElementY(pill)+20&&getElementY(activeVirus[i])+50>getElementY(pill)+20) {
+			if(getElementX(activeVirus[i])<getElementX(pill)+20&&getElementX(activeVirus[i])+50>getElementX(pill)+20&&getElementY(activeVirus[i])<getElementY(pill)+20&&getElementY(activeVirus[i])+50>getElementY(pill)+20&&activeVirus[i].isVisible()==true) {
 				activeVirus[i].setVisible(false);
 				pill.setVisible(false);
 				makeShot = false;
@@ -575,6 +607,7 @@ private void restartPacman() {
 private void restartGame() {
 	x = 0;
 	y = 0;
+	countForPill = 0;
 	life = 3;
 	restartTimer();
 	activeVirusesCount = 0;
@@ -605,28 +638,7 @@ private void createActiveVirus() {
 	}
 	
    }
-private void createBonus() {
-	   boolean complited = false;
-	while(complited==false) {
-		int virusx = random.nextInt(pixel.length);
-		int virusy = random.nextInt(pixel.length);
-		if(pixel[virusy][virusx]!=-2) {
-			Virus v = virus[pixel[virusy][virusx]];
-			virusx = (int) v.getBounds().getMinX()+1;
-			virusy = (int) v.getBounds().getMinY();
-			if(bonusCount%2==0) {
-				virusx+=9;
-				virusy+=9;
-			}
-			//bonus[bonusCount].setLocation(virusx,virusy);
-			//bonus[bonusCount].setVisible(true);
-			bonusCount++;
-			complited = true;
-		}
-		
-	}
-	
-}
+
 
    private void timer() {
 	   count++;
@@ -643,10 +655,11 @@ private void createBonus() {
 		   if(virus[i].isVis()==false) 
 			   check++;
 	   }
-	if(ifFinal()) {
+	if(ifFinal()&&pacman.isVisible()==true) {
 		for (int i = 0; i < activeVirus.length; i++) {
 			activeVirus[i].setVisible(false);
 		}
+		pacman.setVisible(false);
 		fin.setIcon(new ImageIcon("images/pacwin.png"));
 		fin.setVisible(true);
 	}
