@@ -3,6 +3,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
@@ -14,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
@@ -40,6 +43,8 @@ public class Pacman extends JFrame implements KeyListener{
     private int pacSize = 50;
     private int pixel[][] = new int [HEIGH][WIDHT];
     Virus virus[] = new Virus[83];
+    JButton restart = new JButton();
+    JButton nextLevel = new JButton("Далі");
     JLabel fin;
     JLabel activeVirus[] = new JLabel[5];
     JLabel pacLifes[] = new JLabel[3];
@@ -80,6 +85,13 @@ public class Pacman extends JFrame implements KeyListener{
         	}
 		}
         add(panel);
+        
+        restart.setBounds(552,255,33,30);
+        restart.setIcon(new ImageIcon("images/restart.png"));
+        restart.setBorder(null);
+        restart.setBackground(null);
+        restart.setVisible(false);
+        panel.add(restart);
         
         fin = new JLabel();
 		fin.setBounds(200,200,400,270);
@@ -500,7 +512,13 @@ private void restartPacman() {
 		pacman.setVisible(false);
 		fin.setIcon(new ImageIcon("images/viruswin.png"));
 		fin.setVisible(true);
-		restartGame();
+		restart.setVisible(true);
+		restart.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+            	//restartGame();
+            }
+			
+       });
 		
 	}
 	
@@ -559,6 +577,7 @@ private void createActiveVirus() {
 		}
 		fin.setIcon(new ImageIcon("images/pacwin.png"));
 		fin.setVisible(true);
+		restart.setVisible(true);
 	}
 		
 	
