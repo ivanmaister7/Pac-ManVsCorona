@@ -46,7 +46,7 @@ public class Pacman extends JFrame implements KeyListener{
     private int y = 0;
     private int pacSize = 50;
     private int pixel[][] = new int [HEIGH][WIDHT];
-    Virus virus[] = new Virus[83];
+    
     JButton nextLevel = new JButton("Далі");
     JLabel tablet = new JLabel();
     JLabel fin = new JLabel();;
@@ -55,6 +55,15 @@ public class Pacman extends JFrame implements KeyListener{
 	JLabel pacman;
 	JLabel score;
 	JLabel bord[] = new JLabel[6];
+	Virus virus[] = new Virus[83];
+	JLabel bord1[] = new JLabel[6];
+    Virus virus1[] = new Virus[83];
+    JLabel bord2[] = new JLabel[9];
+    Virus virus2[] = new Virus[95];
+    JLabel bord3[] = new JLabel[9];
+    Virus virus3[] = new Virus[91];
+    JLabel bord4[] = new JLabel[19];
+    Virus virus4[] = new Virus[111];
 	JPanel panel;
 	JLabel but = new JLabel();
 	JLabel pointPanel;
@@ -82,10 +91,21 @@ public class Pacman extends JFrame implements KeyListener{
    public void createGUI() {
         
 	   if(level==1) {
-		   bord = new JLabel[9];
-		   virus = new Virus[95];
+		   bord = bord1;
+		   virus = virus1;
 	   }
-        
+	   if(level==2) {
+		   bord = bord2;
+		   virus = virus2;
+	   }
+	   if(level==3) {
+		   bord = bord3;
+		   virus = virus3;
+	   }
+	   if(level==4) {
+		   bord = bord4;
+		   virus = virus4;
+	   }
         panel = new JPanel();
         panel.setLayout(null);
         panel.setBackground(Color.black);
@@ -143,6 +163,48 @@ public class Pacman extends JFrame implements KeyListener{
 			panel.add(bord[i]);
 		}
         if(level==0) {
+        	for (int i = 0; i < bord1.length; i++) {
+    			bord1[i] = new JLabel();
+    			bord1[i].setIcon(new ImageIcon("images/bord"+level+"."+(i+1)+".png"));
+    			panel.add(bord1[i]);
+    		}
+        }
+        if(level==1) {
+        	for (int i = 0; i < bord2.length; i++) {
+    			bord2[i] = new JLabel();
+    			bord2[i].setIcon(new ImageIcon("images/bord"+level+"."+(i+1)+".png"));
+    			panel.add(bord2[i]);
+    		}
+        }
+        if(level==2) {
+        	for (int i = 0; i < bord3.length; i++) {
+    			bord3[i] = new JLabel();
+    			bord3[i].setIcon(new ImageIcon("images/bord"+level+"."+(i+1)+".png"));
+    			panel.add(bord3[i]);
+    		}
+        }
+        if(level==3) {
+        	for (int i = 0; i < bord4.length; i++) {
+    			bord4[i] = new JLabel();
+    			bord4[i].setIcon(new ImageIcon("images/bord"+level+"."+(i+1)+".png"));
+    			panel.add(bord4[i]);
+    		}
+        }
+        if(level==0) {
+        	bord[0].setBounds(50,50,200,150);
+            addBoardsToPixelList(bord[0]);
+            bord[1].setBounds(300,50,200,150);
+            addBoardsToPixelList(bord[1]);
+            bord[2].setBounds(550,50,200,150);
+            addBoardsToPixelList(bord[2]);
+            bord[3].setBounds(50,250,200,300);
+            addBoardsToPixelList(bord[3]);
+            bord[4].setBounds(300,250,200,300);
+            addBoardsToPixelList(bord[4]);
+            bord[5].setBounds(550,250,200,300);
+            addBoardsToPixelList(bord[5]);
+        }
+        if(level==1) {
         	bord[0].setBounds(50,50,200,150);
             addBoardsToPixelList(bord[0]);
             bord[1].setBounds(300,50,200,300);
@@ -156,7 +218,7 @@ public class Pacman extends JFrame implements KeyListener{
             bord[5].setBounds(550,250,200,300);
             addBoardsToPixelList(bord[5]);
         }
-        if(level==1) {
+        if(level==2) {
         	bord[0].setBounds(50,50,200,150);
             addBoardsToPixelList(bord[0]);
             bord[1].setBounds(300,50,200,100);
@@ -174,6 +236,66 @@ public class Pacman extends JFrame implements KeyListener{
             bord[7].setBounds(550,250,200,100);
             addBoardsToPixelList(bord[7]);
             bord[8].setBounds(550,400,200,150);
+            addBoardsToPixelList(bord[8]);
+        }
+        if(level==3) {
+        	bord[0].setBounds(50,0,50,50);
+            addBoardsToPixelList(bord[0]);
+            bord[1].setBounds(150,0,500,50);
+            addBoardsToPixelList(bord[1]);
+            bord[2].setBounds(700,0,50,50);
+            addBoardsToPixelList(bord[2]);
+            bord[3].setBounds(50,100,100,450);
+            addBoardsToPixelList(bord[3]);
+            bord[4].setBounds(200,100,400,100);
+            addBoardsToPixelList(bord[4]);
+            bord[5].setBounds(650,100,100,450);
+            addBoardsToPixelList(bord[5]);
+            bord[6].setBounds(200,250,100,300);
+            addBoardsToPixelList(bord[6]);
+            bord[7].setBounds(350,250,100,300);
+            addBoardsToPixelList(bord[7]);
+            bord[8].setBounds(500,250,100,300);
+            addBoardsToPixelList(bord[8]);
+        }
+        if(level==4) {
+        	bord[0].setBounds(50,0,50,50);
+            addBoardsToPixelList(bord[0]);
+            bord[1].setBounds(150,0,500,50);
+            addBoardsToPixelList(bord[1]);
+            bord[2].setBounds(700,0,50,50);
+            addBoardsToPixelList(bord[2]);
+            bord[3].setBounds(50,100,100,100);
+            addBoardsToPixelList(bord[3]);
+            bord[4].setBounds(200,100,100,100);
+            addBoardsToPixelList(bord[4]);
+            bord[5].setBounds(350,100,100,100);
+            addBoardsToPixelList(bord[5]);
+            bord[6].setBounds(500,100,100,100);
+            addBoardsToPixelList(bord[6]);
+            bord[7].setBounds(650,100,100,100);
+            addBoardsToPixelList(bord[7]);
+            bord[8].setBounds(50,250,100,100);
+            addBoardsToPixelList(bord[8]);
+            bord[9].setBounds(50,0,50,50);
+            addBoardsToPixelList(bord[0]);
+            bord[10].setBounds(150,0,500,50);
+            addBoardsToPixelList(bord[1]);
+            bord[11].setBounds(700,0,50,50);
+            addBoardsToPixelList(bord[2]);
+            bord[12].setBounds(50,100,100,100);
+            addBoardsToPixelList(bord[3]);
+            bord[13].setBounds(200,100,100,100);
+            addBoardsToPixelList(bord[4]);
+            bord[14].setBounds(350,100,100,100);
+            addBoardsToPixelList(bord[5]);
+            bord[15].setBounds(500,100,100,100);
+            addBoardsToPixelList(bord[6]);
+            bord[16].setBounds(650,100,100,100);
+            addBoardsToPixelList(bord[7]);
+            bord[17].setBounds(50,250,100,100);
+            addBoardsToPixelList(bord[8]);
+            bord[18].setBounds(50,250,100,100);
             addBoardsToPixelList(bord[8]);
         }
         
@@ -203,6 +325,34 @@ public class Pacman extends JFrame implements KeyListener{
 	        addVirusToPixelList(virus[v], v);
 			virus[v].add(panel);
 		}
+        if(level==0) {
+        	for (int v = 0; v < virus1.length; v++) {
+    			virus1[v] = new Virus();
+    			putOnPlace1(v);
+    			virus1[v].add(panel);
+    		}
+        }
+        if(level==0) {
+        	for (int v = 0; v < virus2.length; v++) {
+    			virus2[v] = new Virus();
+    			putOnPlace2(v);
+    			virus2[v].add(panel);
+    		}
+        }
+        if(level==0) {
+        	for (int v = 0; v < virus3.length; v++) {
+    			virus3[v] = new Virus();
+    			putOnPlace3(v);
+    			virus3[v].add(panel);
+    		}
+        }
+        if(level==0) {
+        	for (int v = 0; v < virus4.length; v++) {
+    			virus4[v] = new Virus();
+    			putOnPlace4(v);
+    			virus4[v].add(panel);
+    		}
+        }
    
    }
    
@@ -218,6 +368,58 @@ public class Pacman extends JFrame implements KeyListener{
 			}
 		}
 	 virus[v].setBounds(xloc,yloc,49,49);
+}
+ private void putOnPlace1(int v) {
+	 int xloc = -50;
+	 int yloc = -50;
+	 for (int i = 0; i < HEIGH/50; i++) {
+     	for (int j = 0; j < WIDHT/50; j++) {
+				if(pixel[50*i][50*j]==-1&&xloc+yloc<0) {
+					xloc = 50*j;
+					yloc = 50*i;
+				}
+			}
+		}
+	 virus1[v].setBounds(xloc,yloc,49,49);
+}
+ private void putOnPlace2(int v) {
+	 int xloc = -50;
+	 int yloc = -50;
+	 for (int i = 0; i < HEIGH/50; i++) {
+     	for (int j = 0; j < WIDHT/50; j++) {
+				if(pixel[50*i][50*j]==-1&&xloc+yloc<0) {
+					xloc = 50*j;
+					yloc = 50*i;
+				}
+			}
+		}
+	 virus2[v].setBounds(xloc,yloc,49,49);
+}
+ private void putOnPlace3(int v) {
+	 int xloc = -50;
+	 int yloc = -50;
+	 for (int i = 0; i < HEIGH/50; i++) {
+     	for (int j = 0; j < WIDHT/50; j++) {
+				if(pixel[50*i][50*j]==-1&&xloc+yloc<0) {
+					xloc = 50*j;
+					yloc = 50*i;
+				}
+			}
+		}
+	 virus3[v].setBounds(xloc,yloc,49,49);
+}
+ private void putOnPlace4(int v) {
+	 int xloc = -50;
+	 int yloc = -50;
+	 for (int i = 0; i < HEIGH/50; i++) {
+     	for (int j = 0; j < WIDHT/50; j++) {
+				if(pixel[50*i][50*j]==-1&&xloc+yloc<0) {
+					xloc = 50*j;
+					yloc = 50*i;
+				}
+			}
+		}
+	 virus4[v].setBounds(xloc,yloc,49,49);
 }
 
 private void addBoardsToPixelList(JLabel bord) {
@@ -272,7 +474,7 @@ private void addBoardsToPixelList(JLabel bord) {
        if(e.getKeyCode()==KeyEvent.VK_R) {
     	   restartGame();
        }
-       if(e.getKeyCode()==KeyEvent.VK_ENTER&&fin.isVisible()==true) {
+       if(e.getKeyCode()==KeyEvent.VK_ENTER) {
     	   level++;
     	   restartGame();
        }
@@ -368,7 +570,26 @@ private void addBoardsToPixelList(JLabel bord) {
      for (int i = 0; i < virus.length; i++) {
 		virus[i].anim();
 	}
-	
+     if(level==0) {
+    	 for (int i = 0; i < virus1.length; i++) {
+    	 		virus1[i].anim();
+    	 	}
+     }
+     if(level==0) {
+    	 for (int i = 0; i < virus2.length; i++) {
+    		 virus2[i].anim();
+    	 }
+	}
+     if(level==0) {
+    	 for (int i = 0; i < virus3.length; i++) {
+    		 virus3[i].anim();
+    	 }
+	}
+     if(level==0) {
+    	 for (int i = 0; i < virus4.length; i++) {
+    		 virus4[i].anim();
+    	 }
+	}
      if(second==10*(activeVirusesCount+1)&&activeVirusesCount<5) {
     	 createActiveVirus();
      }
@@ -612,6 +833,7 @@ private void restartGame() {
 	restartTimer();
 	activeVirusesCount = 0;
 	scoreNum = 0;
+	
 	createGUI();
 	
 }
