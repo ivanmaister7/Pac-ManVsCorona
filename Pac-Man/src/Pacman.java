@@ -277,26 +277,26 @@ public class Pacman extends JFrame implements KeyListener{
             addBoardsToPixelList(bord[7]);
             bord[8].setBounds(50,250,100,100);
             addBoardsToPixelList(bord[8]);
-            bord[9].setBounds(50,0,50,50);
-            addBoardsToPixelList(bord[0]);
-            bord[10].setBounds(150,0,500,50);
-            addBoardsToPixelList(bord[1]);
-            bord[11].setBounds(700,0,50,50);
-            addBoardsToPixelList(bord[2]);
-            bord[12].setBounds(50,100,100,100);
-            addBoardsToPixelList(bord[3]);
-            bord[13].setBounds(200,100,100,100);
-            addBoardsToPixelList(bord[4]);
-            bord[14].setBounds(350,100,100,100);
-            addBoardsToPixelList(bord[5]);
-            bord[15].setBounds(500,100,100,100);
-            addBoardsToPixelList(bord[6]);
-            bord[16].setBounds(650,100,100,100);
-            addBoardsToPixelList(bord[7]);
-            bord[17].setBounds(50,250,100,100);
-            addBoardsToPixelList(bord[8]);
-            bord[18].setBounds(50,250,100,100);
-            addBoardsToPixelList(bord[8]);
+            bord[9].setBounds(200,250,100,50);
+            addBoardsToPixelList(bord[9]);
+            bord[10].setBounds(500,250,100,50);
+            addBoardsToPixelList(bord[10]);
+            bord[11].setBounds(650,250,100,100);
+            addBoardsToPixelList(bord[11]);
+            bord[12].setBounds(50,400,100,150);
+            addBoardsToPixelList(bord[12]);
+            bord[13].setBounds(200,350,100,100);
+            addBoardsToPixelList(bord[13]);
+            bord[14].setBounds(500,350,100,100);
+            addBoardsToPixelList(bord[14]);
+            bord[15].setBounds(650,400,100,150);
+            addBoardsToPixelList(bord[15]);
+            bord[16].setBounds(200,500,100,50);
+            addBoardsToPixelList(bord[16]);
+            bord[17].setBounds(500,500,100,50);
+            addBoardsToPixelList(bord[17]);
+            bord[18].setBounds(350,250,100,300);
+            addBoardsToPixelList(bord[18]);
         }
         
         
